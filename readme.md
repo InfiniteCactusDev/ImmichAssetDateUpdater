@@ -19,7 +19,7 @@ Pull the image locally from ghcr:
 docker pull ghcr.io/infinitecactusdev/immichassetdateupdater:0.2
 ```
 
-Download a copy of `config.example.yaml` locally and change it to match your requirements.
+Download a copy of [config.example.yaml](https://github.com/InfiniteCactusDev/ImmichAssetDateUpdater/blob/main/config.example.yaml) locally and change it to match your requirements.
 
 Run the docker image and make sure it has access to the config file:
 
