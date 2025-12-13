@@ -1,0 +1,27 @@
+# Ignore build outputs
+bin/
+obj/
+*.user
+*.suo
+*.cache
+src/**/*.yaml
+
+# Ignore IDE files
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Ignore sensitive configuration (optional - keep template)
+# appsettings.json
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore publish outputs
+publish/
+*.dll
+*.exe
+*.pdb

@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immich.Api", "Immich.Api\Immich.Api.csproj", "{99A5AAE1-FE3E-4001-B392-25CBFE0AD65E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Immich.Console", "Immich.Console\Immich.Console.csproj", "{353E722E-5515-474D-BDC8-15264DD9A4A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99A5AAE1-FE3E-4001-B392-25CBFE0AD65E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A5AAE1-FE3E-4001-B392-25CBFE0AD65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A5AAE1-FE3E-4001-B392-25CBFE0AD65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A5AAE1-FE3E-4001-B392-25CBFE0AD65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353E722E-5515-474D-BDC8-15264DD9A4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353E722E-5515-474D-BDC8-15264DD9A4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353E722E-5515-474D-BDC8-15264DD9A4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353E722E-5515-474D-BDC8-15264DD9A4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0EAD526-4564-4025-B519-F16E785DEEC5}
+	EndGlobalSection
+EndGlobal
