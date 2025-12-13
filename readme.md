@@ -7,6 +7,9 @@ Special attention should be paid to assets with differing timezones. This is not
 
 If no time can be retrieved from the fimename it will default to 12:00:00.
 
+In case you're looking for alternatives, there's also this repo that does basically the same with a python script (not tested).
+https://github.com/FlorianKrauseResearch/Immich-Metadata-Update
+
 ### ▶️ Runing the tool
 
 Make sure you have pulled the image locally from ghcr:
