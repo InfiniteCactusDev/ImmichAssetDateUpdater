@@ -1,7 +1,11 @@
 # Immich Asset Date Updater
+### 📅 About
+
+The Immich Asset Date Updater searches an Immich library for assets that have a date in the filename. It then checks if the asset has no date, or if its date is older than that of the filebame. It will then change the date with the one of the filename. There are several checks and options in place that make the tool safe and easy to use and customizable. This tool was initially made for private use, but made public due to high demand. Even though I've tested it thouroughly there are no guarantees.
+
 ### ⚠️ Readme
 
-This tool was made for private use, but made public due to high demand. Even though I've tested it thouroughly there are no guarantees. Make sure you test first with `DryRun=true` or with a low MaxUpdateCount to ensure this tool fits your needs. And obviously ensure you have proper backups in place.
+Make sure you test first with `DryRun=true` or with a low MaxUpdateCount to ensure this tool fits your needs. And obviously ensure you have proper backups in place.
 
 Special attention should be paid to assets with differing timezones. This is not something I have tested much myself.
 
