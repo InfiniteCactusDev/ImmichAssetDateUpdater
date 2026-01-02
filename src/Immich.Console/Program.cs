@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using Immich.Console;
 using Immich.Models;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +40,10 @@ try
     var maxUpdateCount = configuration.GetValue<int>("Immich:MaxUpdateCount");
     var parsePatterns = configuration.GetSection("Immich:ParsePatterns").Get<string[]>() ?? [];
     var excludePatterns = configuration.GetSection("Immich:ExcludePatterns").Get<string[]>() ?? [];
+    var skipDateCheck = configuration.GetSection("Immich:SkipDateCheck").Get<bool?>() ?? false;
+    var timeZone = configuration.GetSection("Immich:TimeZone").Get<string>();
+    var minDate = configuration.GetSection("Immich:MinDate").Get<DateTime?>();
+    var maxDate = configuration.GetSection("Immich:MaxDate").Get<DateTime?>();
 
     var fileNameParser = new FileNameParser(parsePatterns);
     var ignoredAssetsWithDigits = new List<AssetResponseDto>();
@@ -64,7 +70,16 @@ try
             }
 
             // If the asset has a date which is the same or older than the one from the filename then ignore it
-            if (asset.FileCreatedAt != null && asset.FileCreatedAt.Value.Date <= dateFromName.Value.Date)
+            // This check is skipped if skipDateCheck is enabled
+            if (!skipDateCheck && asset.FileCreatedAt != null && asset.FileCreatedAt.Value.Date <= dateFromName.Value.Date)
+                return false;
+
+            // If minDate is set and the date from the filename is older than minDate then ignore it
+            if (minDate.HasValue && dateFromName.Value.Date < minDate.Value.Date)
+                return false;
+
+            // If maxDate is set and the date from the filename is newer than maxDate then ignore it
+            if (maxDate.HasValue && dateFromName.Value.Date > maxDate.Value.Date)
                 return false;
 
             return true;
@@ -121,7 +136,13 @@ try
     {
         var dateFromName = GetDesiredDateTimeFromFileName(asset.OriginalFileName).Value;
 
-        await service.UpdateDateTimeOriginal(asset, dateFromName);
+        string dateString;
+        if (!string.IsNullOrEmpty(timeZone))
+            dateString = DateHelper.ToTimeZoneString(dateFromName, timeZone);
+        else
+            dateString = dateFromName.ToString("o", CultureInfo.InvariantCulture);
+
+        await service.UpdateDateTimeOriginal(asset, dateString);
 
         if (albumId.HasValue)
             await service.AddAssetToAlbum(albumId.Value, asset);

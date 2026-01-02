@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Immich.Models;
+﻿using Immich.Models;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 
@@ -46,11 +45,11 @@ namespace Immich.Console
             return items;
         }
 
-        public async Task UpdateDateTimeOriginal(AssetResponseDto asset, DateTime dateTime)
+        public async Task UpdateDateTimeOriginal(AssetResponseDto asset, string dateTime)
         {
             await _client.Assets[Guid.Parse(asset.Id)].PutAsync(new UpdateAssetDto
             {
-                DateTimeOriginal = dateTime.ToString("o", CultureInfo.InvariantCulture),
+                DateTimeOriginal = dateTime
             }, x => x.Headers.Add("x-api-key", _apiKey));
         }
 

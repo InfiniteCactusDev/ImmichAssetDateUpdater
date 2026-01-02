@@ -1,25 +1,46 @@
 ﻿Immich:
   # The URL to your Immich API endpoint
   ApiUrl: http://localhost:2283/api
+
   # The API-key used to authenticate. The key can be created in Immich > Account Settings > API Keys
   ApiKey: <api key here>
+
   # Only reports about planned changes without applying them
   DryRun: true
+
   # Log the list of skipped assets
   LogSkipped: true
+
   # Log the list of updated assets
   LogUpdated: true
+
   # If you want to move the updated assets to an album so they can be reviewed
   MoveToAlbum: true
+
   # The maximum number of assets to update in one run
   MaxUpdateCount: 5
-  # A list of device id's to process, leave empty to include all assets.
-  # This is useful if you only want to process assets from a specific device.
+
+  # Only updates assets within the specified date range
+  MinDate: 2025-01-01
+  MaxDate: 2025-12-31
+
+  # When true also updates assets with the same or an earlier date
+  SkipDateCheck: false
+
+  # The timezone to apply to the parsed date and time information
+  # Make sure you understand what you are doing when using this!
+  # TimeZone: Europe/Berlin
+
+  # A list of device id's to process, leave empty to include all assets
+  # This is useful if you only want to process assets from a specific source/device
   DeviceIds:
   #  - WEB
   #  - ece3bf929261ac26bc4d8e36f63956a43bc817ed2g4985a8b84de65e44caf5fa
-  # A list of regex patterns used to retrieve date and time info from a filename.
-  # The patterns are expected to have a named capture groups: year, month, day, hour, minute, second.
+  
+  # A list of regex patterns used to retrieve date and time info from a filename
+  # The patterns are expected to have named capture groups:
+  # Required: year, month, day
+  # Optional: hour, minute, second.
   ParsePatterns:
     - IMG-(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d).*
     - VID-(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d).*
@@ -30,6 +51,7 @@
     - VID_(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d)_(?<hour>\d\d)(?<minute>\d\d)(?<second>\d\d).*
     - WhatsApp Image (?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d) at (?<hour>\d\d)\.(?<minute>\d\d)\.(?<second>\d\d).*
     - WhatsApp Video (?<year>\d\d\d\d)-(?<month>\d\d)-(?<day>\d\d) at (?<hour>\d\d)\.(?<minute>\d\d)\.(?<second>\d\d).*
-  # A list of regex patterns used to exclude files from processing.
+  
+  # A list of regex patterns used to exclude files from processing
   ExcludePatterns:
     - WP_\d\d\d\d\d\d.jpg
