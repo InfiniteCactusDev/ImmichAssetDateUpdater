@@ -12,8 +12,8 @@ Special attention should be paid to assets with differing timezones. This is not
 If no time can be retrieved from the fimename it will default to 12:00:00.
 
 If this tool doesn't quite fit your needs, there are alternatives available. I have not tried or reviewed them:
-https://github.com/FlorianKrauseResearch/Immich-Metadata-Update
-https://github.com/veryaner/immich-updater
+ - https://github.com/FlorianKrauseResearch/Immich-Metadata-Update
+ - https://github.com/veryaner/immich-updater
 
 ### ▶️ Runing the tool
 
