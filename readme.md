@@ -7,9 +7,9 @@ The Immich Asset Date Updater searches an Immich library for assets that have a 
 
 Make sure you test first with `DryRun=true` and/or with a low MaxUpdateCount to ensure this tool fits your needs. And obviously ensure you have proper backups in place.
 
-Special attention should be paid to assets with differing timezones. This is not something I have tested much myself. Since v0.3 it does have limited timezone support.
+Special attention should be paid to assets with differing timezones. There is some timezone support since v0.4, but it's advised to test carefully against your setup.
 
-If no time can be retrieved from the fimename it will default to 12:00:00.
+If no time can be retrieved from the filename it will default to 12:00:00.
 
 If this tool doesn't quite fit your needs, there are alternatives available. I have not tried or reviewed them:
  - https://github.com/FlorianKrauseResearch/Immich-Metadata-Update
@@ -20,7 +20,7 @@ If this tool doesn't quite fit your needs, there are alternatives available. I h
 Pull the image locally from ghcr:
 
 ```bash
-docker pull ghcr.io/infinitecactusdev/immichassetdateupdater:0.3
+docker pull ghcr.io/infinitecactusdev/immichassetdateupdater:0.4
 ```
 
 Download a copy of [config.example.yaml](https://github.com/InfiniteCactusDev/ImmichAssetDateUpdater/blob/main/config.example.yaml) locally and change it to match your requirements.
@@ -28,7 +28,7 @@ Download a copy of [config.example.yaml](https://github.com/InfiniteCactusDev/Im
 Run the docker image and make sure it has access to the config file:
 
 ```bash
-docker run -v "./config.yaml:/app/config.yaml:ro" --rm "ghcr.io/infinitecactusdev/immichassetdateupdater:0.3"
+docker run -v "./config.yaml:/app/config.yaml:ro" --rm "ghcr.io/infinitecactusdev/immichassetdateupdater:0.4"
 ```
 
 ### ⚒️ Build the image yourself
@@ -36,5 +36,5 @@ docker run -v "./config.yaml:/app/config.yaml:ro" --rm "ghcr.io/infinitecactusde
 Clone the repo and build it:
 
 ```bash
-docker build -t immichassetdateupdater:0.3 .
+docker build -t immichassetdateupdater:0.4 .
 ```
