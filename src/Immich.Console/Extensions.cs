@@ -2,12 +2,14 @@
 
 namespace Immich.Console
 {
-    public class DateHelper
+    public static class Extensions
     {
-        public static string ToTimeZoneString(DateTime dateTime, string timeZone)
+        public static string ToImmichString(this Instant instant, string timeZone)
         {
+            if (string.IsNullOrEmpty(timeZone))
+                return instant.ToString();
+
             var tz = DateTimeZoneProviders.Tzdb[timeZone];
-            var instant = Instant.FromDateTimeUtc(dateTime);
             var offset = tz.GetUtcOffset(instant);
             var offsetDuration = Duration.FromTimeSpan(offset.ToTimeSpan());
             return instant.Minus(offsetDuration).WithOffset(offset).ToString();

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using NodaTime;
 
 namespace Immich.Console
 {
@@ -72,16 +73,16 @@ namespace Immich.Console
             }
         }
 
-        public DateTime ToDateTime()
+        public Instant ToDateTimeUTC()
         {
-            return new DateTime(
+            return Instant.FromDateTimeUtc(new DateTime(
                 Year ?? 1900,
                 Month ?? 1,
                 Day ?? 1,
                 Hour ?? 12,
                 Minute ?? 0,
-                Second ?? 0
-            );
+                Second ?? 0,
+                DateTimeKind.Utc));
         }
     }
 }

@@ -21,9 +21,9 @@ namespace Immich.Console
             _apiKey = apiKey;
         }
 
-        public async Task<List<AssetResponseDto>> GetAllAssets()
+        public async Task<List<AssetWrapper>> GetAllAssets()
         {
-            var items = new List<AssetResponseDto>();
+            var items = new List<AssetWrapper>();
 
             var page = 1;
             while (true)
@@ -34,7 +34,7 @@ namespace Immich.Console
                     Page = page,
                 }, x => x.Headers.Add("x-api-key", _apiKey));
 
-                items.AddRange(response.Assets.Items);
+                items.AddRange(response.Assets.Items.Select(c => new AssetWrapper(c)));
 
                 page++;
 
@@ -45,9 +45,9 @@ namespace Immich.Console
             return items;
         }
 
-        public async Task UpdateDateTimeOriginal(AssetResponseDto asset, string dateTime)
+        public async Task UpdateDateTimeOriginal(Guid assetId, string dateTime)
         {
-            await _client.Assets[Guid.Parse(asset.Id)].PutAsync(new UpdateAssetDto
+            await _client.Assets[assetId].PutAsync(new UpdateAssetDto
             {
                 DateTimeOriginal = dateTime
             }, x => x.Headers.Add("x-api-key", _apiKey));
@@ -63,11 +63,11 @@ namespace Immich.Console
             return Guid.Parse(response.Id);
         }
 
-        public async Task AddAssetToAlbum(Guid albumId, AssetResponseDto asset)
+        public async Task AddAssetToAlbum(Guid albumId, Guid assetId)
         {
             await _client.Albums[albumId].Assets.PutAsync(new BulkIdsDto
             {
-                Ids = [(Guid?)Guid.Parse(asset.Id)]
+                Ids = [(Guid?)assetId]
             }, x => x.Headers.Add("x-api-key", _apiKey));
         }
     }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using Immich.Console;
-using Immich.Models;
 using Microsoft.Extensions.Configuration;
+using NodaTime;
 
 try
 {
@@ -46,7 +44,7 @@ try
     var maxDate = configuration.GetSection("Immich:MaxDate").Get<DateTime?>();
 
     var fileNameParser = new FileNameParser(parsePatterns);
-    var ignoredAssetsWithDigits = new List<AssetResponseDto>();
+    var ignoredAssetsWithDigits = new List<AssetWrapper>();
     var service = new ImmichService(apiUrl, apiKey);
 
     Console.WriteLine("Fetching assets...");
@@ -58,10 +56,10 @@ try
             if (ShouldExclude(fileName))
                 return false;
 
-            var dateFromName = GetDesiredDateTimeFromFileName(fileName);
+            var utcDateFromName = asset.GetUtcDateTimeFromFileName(fileNameParser);
 
-            // Ignore assets that do not have a date in the filename
-            if (dateFromName == null)
+            // Ignore assets for which no date could be retrieved from the filename
+            if (utcDateFromName == null)
             {
                 // Log ignored assets that have digits in the name
                 if (fileName.Count(c => char.IsNumber(c)) >= 6)
@@ -69,17 +67,17 @@ try
                 return false;
             }
 
-            // If the asset has a date which is the same or older than the one from the filename then ignore it
+            // If the asset already has a date which is the same or older than the one from the filename then ignore it
             // This check is skipped if skipDateCheck is enabled
-            if (!skipDateCheck && asset.FileCreatedAt != null && asset.FileCreatedAt.Value.Date <= dateFromName.Value.Date)
+            if (!skipDateCheck && asset.DateTimeOriginalUTC != null && asset.DateTimeOriginalUTC.Value.ToDateTimeUtc().Date <= utcDateFromName.Value.ToDateTimeUtc().Date)
                 return false;
 
             // If minDate is set and the date from the filename is older than minDate then ignore it
-            if (minDate.HasValue && dateFromName.Value.Date < minDate.Value.Date)
+            if (minDate.HasValue && utcDateFromName.Value.ToDateTimeUtc().Date < minDate.Value.Date)
                 return false;
 
             // If maxDate is set and the date from the filename is newer than maxDate then ignore it
-            if (maxDate.HasValue && dateFromName.Value.Date > maxDate.Value.Date)
+            if (maxDate.HasValue && utcDateFromName.Value.ToDateTimeUtc().Date > maxDate.Value.Date)
                 return false;
 
             return true;
@@ -114,8 +112,9 @@ try
         if (logUpdated)
             foreach (var asset in assetsToUpdate)
             {
-                var dateFromName = GetDesiredDateTimeFromFileName(asset.OriginalFileName).Value;
-                Console.WriteLine($" - Asset: {asset.OriginalFileName} | Current date: {asset.LocalDateTime} | New date: {dateFromName}");
+                var dateFromName = asset.GetUtcDateTimeFromFileName(fileNameParser).Value;
+                var dateString = dateFromName.ToImmichString(timeZone);
+                Console.WriteLine($" - Asset: {asset.OriginalFileName} | Current date (UTC): {asset.DateTimeOriginalUTC} | New date: {dateString}");
             }
 
         Console.WriteLine("Stopped because 'DryRun' is enabled.");
@@ -134,33 +133,19 @@ try
     Console.WriteLine("Updating assets...");
     foreach (var asset in assetsToUpdate)
     {
-        var dateFromName = GetDesiredDateTimeFromFileName(asset.OriginalFileName).Value;
-
-        string dateString;
-        if (!string.IsNullOrEmpty(timeZone))
-            dateString = DateHelper.ToTimeZoneString(dateFromName, timeZone);
-        else
-            dateString = dateFromName.ToString("o", CultureInfo.InvariantCulture);
-
-        await service.UpdateDateTimeOriginal(asset, dateString);
+        var dateFromName = asset.GetUtcDateTimeFromFileName(fileNameParser).Value;
+        var dateString = dateFromName.ToImmichString(timeZone);
+        await service.UpdateDateTimeOriginal(asset.Id, dateString);
 
         if (albumId.HasValue)
-            await service.AddAssetToAlbum(albumId.Value, asset);
+            await service.AddAssetToAlbum(albumId.Value, asset.Id);
 
         if (logUpdated)
-            Console.WriteLine($" - Updated: {asset.OriginalFileName} | Current date: {asset.LocalDateTime} | New date: {dateFromName}");
+            Console.WriteLine($" - Updated: {asset.OriginalFileName} | Current date (UTC): {asset.DateTimeOriginalUTC} | New date: {dateString}");
     }
 
     Console.WriteLine("Assets have been updated.");
     Console.WriteLine("Bye!");
-
-    DateTime? GetDesiredDateTimeFromFileName(string fileName)
-    {
-        var bestResult = fileNameParser.Parse(fileName).OrderByDescending(r => r.Score).FirstOrDefault();
-        if (bestResult == null || bestResult.Score < 3)
-            return null;
-        return bestResult.ToDateTime();
-    }
 
     bool ShouldExclude(string fileName)
     {
