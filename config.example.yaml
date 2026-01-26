@@ -24,7 +24,8 @@
   MinDate: 2025-01-01
   MaxDate: 2025-12-31
 
-  # When true also updates assets with the same or an earlier date
+  # When true also updates assets that already have the same or an earlier date then what was parsed from the filename
+  # One scenario this can be used for is when the dates are correct, but all timezones need to be adjusted
   SkipDateCheck: false
 
   # The timezone to apply to updated assets. Make sure you understand what you are doing when using this!
