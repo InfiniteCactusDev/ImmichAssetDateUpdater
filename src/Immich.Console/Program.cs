@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Immich.Console;
 using Microsoft.Extensions.Configuration;
-using NodaTime;
 
 try
 {
@@ -88,12 +87,12 @@ try
 
     if (ignoredAssetsWithDigits.Count != 0)
     {
-        Console.WriteLine($"Found '{ignoredAssetsWithDigits}' assets that contain 6 or more digits in the name, but were not matched by any pattern (in- or exclude).");
+        Console.WriteLine($"Found '{ignoredAssetsWithDigits.Count}' assets that contain 6 or more digits in the name, but were not matched by any pattern (in- or exclude).");
         Console.WriteLine($"You might want to update your patterns so these will be in- excluded in the next run.");
 
         if (logSkipped)
             foreach (var asset in ignoredAssetsWithDigits)
-                Console.WriteLine($" - {asset.OriginalFileName}");
+                Console.WriteLine($" - {asset.OriginalFileName} | Current date (UTC): {asset.DateTimeOriginalUTC}");
         else
             Console.WriteLine("Enable 'LogSkipped' in the config to see the list of ignored assets.");
     }
@@ -125,7 +124,7 @@ try
     Guid? albumId = null;
     if (moveToAlbum)
     {
-        var albumName = $"Immich Asset Date Updater: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
+        var albumName = $"IADU: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
         Console.WriteLine($"Creating album: {albumName}");
         albumId = await service.CreateAlbum(albumName);
     }
